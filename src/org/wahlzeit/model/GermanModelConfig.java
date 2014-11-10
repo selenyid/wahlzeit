@@ -74,6 +74,7 @@ public class GermanModelConfig extends AbstractModelConfig {
 		} else {
 			result += " von " + un;
 		}
+		
 		return result;
 	}
 	

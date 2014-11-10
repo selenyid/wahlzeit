@@ -23,8 +23,10 @@ package org.wahlzeit.model;
 import java.sql.*;
 import java.net.*;
 
+import org.wahlzeit.location.*;
 import org.wahlzeit.services.*;
 import org.wahlzeit.utils.*;
+
 
 /**
  * A photo represents a user-provided (uploaded) photo.
@@ -108,8 +110,16 @@ public class Photo extends DataObject {
 	protected long creationTime = System.currentTimeMillis();
 	
 	/**
-	 * 
+	 * Selenyi, 29.10.2014
+	 * Erweiterung des Models Photo um die Attribute MAPCODES und GPS
 	 */
+	
+	public String gps;
+	public String mapcodes;	
+	
+	public IfLocation MyInterfaceObjectMapCodes = new MapCodes();
+	public IfLocation MyInterfaceObjectGps = new Gps();	
+	
 	public Photo() {
 		id = PhotoId.getNextId();
 		incWriteCount();
@@ -167,6 +177,10 @@ public class Photo extends DataObject {
 		creationTime = rset.getLong("creation_time");
 
 		maxPhotoSize = PhotoSize.getFromWidthHeight(width, height);
+		
+		//Selényi
+		gps = rset.getString("gps");
+		mapcodes = rset.getString("mapcodes");
 	}
 	
 	/**
@@ -186,7 +200,8 @@ public class Photo extends DataObject {
 		rset.updateInt("status", status.asInt());
 		rset.updateInt("praise_sum", praiseSum);
 		rset.updateInt("no_votes", noVotes);
-		rset.updateLong("creation_time", creationTime);		
+		rset.updateLong("creation_time", creationTime);
+		rset.updateString("gps", gps);
 	}
 
 	/**
@@ -254,6 +269,7 @@ public class Photo extends DataObject {
 		return cfg.asPhotoCaption(ownerName, ownerHomePage);
 	}
 
+	
 	/**
 	 * 
 	 * @methodtype get
@@ -359,6 +375,9 @@ public class Photo extends DataObject {
 	public int getThumbWidth() {
 		return isWiderThanHigher() ? MAX_THUMB_PHOTO_WIDTH : (width * MAX_THUMB_PHOTO_HEIGHT / height);
 	}
+	
+	
+	
 	
 	/**
 	 * 
@@ -481,4 +500,24 @@ public class Photo extends DataObject {
 		return creationTime;
 	}
 	
+	/** 
+	 * @throws
+	 * @methodtype get
+	 */
+	public String getGps(Photo photo)
+	{
+			
+		return MyInterfaceObjectGps.getLocation(photo);
+	}
+	
+	/** 
+	 * @throws
+	 * @methodtype get
+	 */
+	public String getMapCodes(Photo photo)
+	{
+				
+		return MyInterfaceObjectMapCodes.getLocation(photo);
+	}
+
 }

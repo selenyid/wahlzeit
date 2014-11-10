@@ -63,6 +63,9 @@ public class EditUserPhotoFormHandler extends AbstractWebFormHandler {
 		part.addString(Photo.PRAISE, photo.getPraiseAsString(us.cfg()));
 		part.maskAndAddString(Photo.TAGS, photo.getTags().asString());
 		
+		//Selényi
+		part.maskAndAddString("gps", photo.getGps(photo));
+		
 		part.addString(Photo.IS_INVISIBLE, HtmlUtil.asCheckboxCheck(photo.getStatus().isInvisible()));
 		part.addString(Photo.STATUS, us.cfg().asValueString(photo.getStatus()));
 		part.addString(Photo.UPLOADED_ON, us.cfg().asDateString(photo.getCreationTime()));	
@@ -87,6 +90,9 @@ public class EditUserPhotoFormHandler extends AbstractWebFormHandler {
 
 		String tags = us.getAndSaveAsString(args, Photo.TAGS);
 		photo.setTags(new Tags(tags));
+		
+		//Selényi
+		photo.gps = us.getAndSaveAsString(args, "gps");
 
 		String status = us.getAndSaveAsString(args, Photo.IS_INVISIBLE);
 		boolean isInvisible = (status != null) && status.equals("on");

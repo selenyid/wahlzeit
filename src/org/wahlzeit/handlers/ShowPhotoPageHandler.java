@@ -20,6 +20,7 @@
 
 package org.wahlzeit.handlers;
 
+import java.sql.SQLException;
 import java.util.*;
 
 import org.wahlzeit.model.*;
@@ -97,7 +98,6 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
 			Tags tags = photo.getTags();
 			page.addString(Photo.DESCRIPTION, getPhotoSummary(us, photo));
 			page.addString(Photo.KEYWORDS, tags.asString(false, ','));
-
 			us.addDisplayedPhoto(photo);
 		}
 		
@@ -155,6 +155,7 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
 	}
 	
 	/**
+	 * @throws SQLException 
 	 * 
 	 */
 	protected void makePhotoCaption(UserSession us, WebPart page) {
@@ -163,6 +164,10 @@ public class ShowPhotoPageHandler extends AbstractWebPageHandler implements WebF
 			
 		WebPart caption = createWebPart(us, PartUtil.CAPTION_INFO_FILE);
 		caption.addString(Photo.CAPTION, getPhotoCaption(us, photo));
+		//Selényi
+		caption.addString(Photo.CAPTION,HtmlUtil.asP(getPhotoCaption(us,photo))+
+										HtmlUtil.asP("GPS: "+photo.getGps(photo))+
+										HtmlUtil.asP(" MapCodes: "+photo.getMapCodes(photo)));
 		page.addWritable(Photo.CAPTION, caption);
 	}
 
